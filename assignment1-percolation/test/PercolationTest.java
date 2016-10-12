@@ -2,6 +2,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
+
 /**
  * Created by Mike Milonakis on 11/10/2016.
  */
@@ -74,4 +79,55 @@ public class PercolationTest {
 
         Assert.assertTrue(percolation.percolates());
     }
+
+    @Test
+    public void Percolates_Input8_ReturnsTrue() {
+        readInputFromTestFile("percolation/input8.txt");
+
+        Assert.assertTrue(percolation.percolates());
+    }
+
+    @Test
+    public void Percolates_Input50_ReturnsTrue() {
+        readInputFromTestFile("percolation/input50.txt");
+
+        Assert.assertTrue(percolation.percolates());
+    }
+
+    @Test
+    public void Percolates_Input8No_ReturnsFalse() {
+        readInputFromTestFile("percolation/input8-no.txt");
+
+        Assert.assertFalse(percolation.percolates());
+    }
+
+    @Test
+    public void Percolates_Input10No_ReturnsFalse() {
+        readInputFromTestFile("percolation/input10-no.txt");
+
+        Assert.assertFalse(percolation.percolates());
+    }
+
+    private void readInputFromTestFile(String testFile) {
+        try (Stream<String> stream = Files.lines(Paths.get(testFile))) {
+            stream.forEach(this::performAction);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void performAction(String s) {
+        String[] numbers = s.trim().split("\\s+");
+        if (numbers.length > 0) {
+            if (numbers.length == 1) {
+                percolation = new Percolation(Integer.parseInt(numbers[0]));
+            }
+            else if (numbers.length == 2) {
+                percolation.open(Integer.parseInt(numbers[0]),
+                        Integer.parseInt(numbers[1]));
+            }
+        }
+    }
+
 }

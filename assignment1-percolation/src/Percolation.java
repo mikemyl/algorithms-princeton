@@ -22,6 +22,13 @@ public class Percolation {
         openSites = new boolean[gridSize * gridSize];
     }
 
+    private void openTheAdditionalHelperSites() {
+        for (int column = 1; column <= gridSize; column++) {
+            uf.union(bottomHelperSite, convertTo1D(1, column));
+            uf.union(topHelperSite, convertTo1D(gridSize, column));
+        }
+    }
+
 
     public void open(int row, int column) {
         validateIndices(row, column);
@@ -30,38 +37,6 @@ public class Percolation {
     }
 
 
-    public boolean isOpen(int row, int column) {
-        validateIndices(row, column);
-        return openSites[convertTo1D(row, column)];
-    }
-
-
-    private void unionWithNeighbors(int row, int column) {
-        if ((row - 1) > 0) {
-            int upper = convertTo1D(row - 1, column);
-            if (isOpen(upper))
-                uf.connected(convertTo1D(row, column), upper);
-        }
-        if ((column + 1) <= gridSize) {
-            int right = convertTo1D(row, column + 1);
-            if (isOpen(right))
-                uf.connected(convertTo1D(row, column), right);
-        }
-        if ((row + 1) <= gridSize) {
-            int down = convertTo1D(row + 1, column);
-            if (isOpen(down))
-                uf.connected(convertTo1D(row, column), down);
-        }
-        if ((column - 1) > 0) {
-            int left = convertTo1D(row, column - 1);
-            if (isOpen(left))
-                uf.connected(convertTo1D(row, column), left);
-        }
-    }
-
-    private boolean isOpen(int index) {
-        return openSites[index];
-    }
 
     private void validateIndices(int row, int column) {
         if (((row <= 0) || (row > gridSize)) || ((column <= 0) || (column >
@@ -69,15 +44,40 @@ public class Percolation {
             throw new IndexOutOfBoundsException();
     }
 
+    private void unionWithNeighbors(int row, int column) {
+        if ((row - 1) > 0) {
+            int down = convertTo1D(row - 1, column);
+            if (isOpen(down))
+                uf.union(convertTo1D(row, column), down);
+        }
+        if ((column + 1) <= gridSize) {
+            int right = convertTo1D(row, column + 1);
+            if (isOpen(right))
+                uf.union(convertTo1D(row, column), right);
+        }
+        if ((row + 1) <= gridSize) {
+            int upper = convertTo1D(row + 1, column);
+            if (isOpen(upper))
+                uf.union(convertTo1D(row, column), upper);
+        }
+        if ((column - 1) > 0) {
+            int left = convertTo1D(row, column - 1);
+            if (isOpen(left))
+                uf.union(convertTo1D(row, column), left);
+        }
+    }
+
+    public boolean isOpen(int row, int column) {
+        validateIndices(row, column);
+        return openSites[convertTo1D(row, column)];
+    }
+
     private int convertTo1D(int row, int column) {
         return ((row - 1) * gridSize) + (column - 1);
     }
 
-    private void openTheAdditionalHelperSites() {
-        for (int column = 1; column <= gridSize; column++) {
-            uf.union(bottomHelperSite, convertTo1D(1, column));
-            uf.union(topHelperSite, convertTo1D(gridSize, column));
-        }
+    private boolean isOpen(int index) {
+        return openSites[index];
     }
 
     public boolean isFull(int row, int column) {
