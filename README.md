@@ -1,4 +1,4 @@
-# [Coursera - Introduction to Algorithms (Princeton University)](https://www.coursera.org/learn/introduction-to-algorithms/home/welcome)
+# Coursera - Introduction to Algorithms (Princeton University)
 
 This repo holds my solutions to the programming assignments for the [Coursera class - Introduction to Algorithms (Princeton University)](https://www.coursera.org/learn/introduction-to-algorithms/home/welcome).
 
