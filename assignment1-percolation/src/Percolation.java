@@ -1,7 +1,23 @@
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
+/*----------------------------------------------------------------
+        *  Author:        Mike Milonakis
+        *  Written:       12/10/2016
+        *  Last updated:  12/10/2016
+        *
+        *
+        *  (Needs to have algs4.jar in classpath)
+        *
+        *  This is the first programming assignment of
+        *  princeton - algorithms course in coursera
+        *
+        *----------------------------------------------------------------*/
+
 /**
- * Created by Mike Milonakis on 11/10/2016.
+ * The PercolationStats  class estimates the percolation Threshold by
+ * executing (T) experiments on N-by-N grid
+ *
+ * @author Mike Milonakis
  */
 public class Percolation {
 
@@ -13,6 +29,10 @@ public class Percolation {
     private final WeightedQuickUnionUF ufBackwash;
     private boolean isPercolated;
 
+    /**
+     *
+     * @param size the Size of the Percolation Grid to be created
+     */
     public Percolation(int size) {
         if (size <= 0)
             throw new IllegalArgumentException();
@@ -33,14 +53,16 @@ public class Percolation {
         }
     }
 
-
+    /**
+     * Opens the site in grid(row,column)
+     * @param row the row of the site
+     * @param column the column of the site
+     */
     public void open(int row, int column) {
         validateIndices(row, column);
         openSites[(convertTo1D(row, column))] = true;
         unionWithNeighbors(row, column);
     }
-
-
 
     private void validateIndices(int row, int column) {
         if (((row <= 0) || (row > gridSize)) || ((column <= 0) || (column >
@@ -49,62 +71,67 @@ public class Percolation {
     }
 
     private void unionWithNeighbors(int row, int column) {
-        if ((row - 1) > 0) {
-            int down = convertTo1D(row - 1, column);
-            if (isOpen(down)) {
-                uf.union(convertTo1D(row, column), down);
-                ufBackwash.union(convertTo1D(row, column), down);
-            }
-        }
-        if ((column + 1) <= gridSize) {
-            int right = convertTo1D(row, column + 1);
-            if (isOpen(right)) {
-                uf.union(convertTo1D(row, column), right);
-                ufBackwash.union(convertTo1D(row, column), right);
-            }
-        }
-        if ((row + 1) <= gridSize) {
-            int upper = convertTo1D(row + 1, column);
-            if (isOpen(upper)) {
-                uf.union(convertTo1D(row, column), upper);
-                ufBackwash.union(convertTo1D(row, column), upper);
-            }
-        }
-        if ((column - 1) > 0) {
-            int left = convertTo1D(row, column - 1);
-            if (isOpen(left)) {
-                uf.union(convertTo1D(row, column), left);
-                ufBackwash.union(convertTo1D(row, column), left);
-            }
-        }
+        if ((row - 1) > 0)
+            connectWithNeighborIfOpen(convertTo1D(row - 1, column), convertTo1D(row, column));
+        if ((column + 1) <= gridSize)
+            connectWithNeighborIfOpen(convertTo1D(row, column + 1), convertTo1D(row, column));
+        if ((row + 1) <= gridSize)
+            connectWithNeighborIfOpen(convertTo1D(row + 1, column), convertTo1D(row, column));
+        if ((column - 1) > 0)
+            connectWithNeighborIfOpen(convertTo1D(row, column - 1), convertTo1D(row, column));
         if (percolates()) {
             uf = ufBackwash;
             isPercolated = true;
         }
     }
 
-    public boolean isOpen(int row, int column) {
-        validateIndices(row, column);
-        return openSites[convertTo1D(row, column)];
+    private void connectWithNeighborIfOpen(int neighbor, int node) {
+        if (isOpen(neighbor)) {
+            uf.union(neighbor, node);
+            ufBackwash.union(neighbor, node);
+        }
     }
 
     private int convertTo1D(int row, int column) {
         return ((row - 1) * gridSize) + (column - 1);
     }
 
+    /**
+     * Checks if the site at grid(row,column) is open
+     * @param row the row of the site
+     * @param column the column of the site
+     * @return true is open - false otherwise
+     */
+    public boolean isOpen(int row, int column) {
+        validateIndices(row, column);
+        return openSites[convertTo1D(row, column)];
+    }
+
     private boolean isOpen(int index) {
         return openSites[index];
     }
 
+    /**
+     * Checks if the site (row,column) is full i.e connected to a top-row site
+     * @param row the row of the site to be checked
+     * @param column the column of the site to be checked
+     * @return true if full - false otherwise
+     */
     public boolean isFull(int row, int column) {
         validateIndices(row, column);
         return isOpen(row, column) &&
                 ufBackwash.connected(convertTo1D(row, column), topHelperSite);
     }
 
+    /**
+     * Checks if any site at the bottom is connected to any site at the top
+     * @return true if it grid percolates - false otherwise
+     */
     public boolean percolates() {
         if (isPercolated)
             return true;
+        if (gridSize == 1)
+            return openSites[0];
         return uf.connected(topHelperSite, bottomHelperSite);
     }
 }

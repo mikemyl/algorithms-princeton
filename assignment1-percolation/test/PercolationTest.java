@@ -1,7 +1,6 @@
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -52,10 +51,10 @@ public class PercolationTest {
 
     @Test
     public void IsFull_SiteInBottomRowIsOpen_ReturnsTrue() {
-        percolation.open(5, 5);
+        percolation.open(1, 5);
 
-        Assert.assertTrue(percolation.isFull(5, 5));
-        Assert.assertFalse(percolation.isFull(5, 4));
+        Assert.assertTrue(percolation.isFull(1, 5));
+        Assert.assertFalse(percolation.isFull(1, 4));
     }
 
     @Test
@@ -80,6 +79,13 @@ public class PercolationTest {
         Assert.assertTrue(percolation.percolates());
     }
 
+    @Test
+    public void Percolates_Input1_ReturnsFalse() {
+        readInputFromTestFile("percolation/input1.txt");
+
+        Assert.assertFalse(percolation.percolates());
+    }
+    
     @Test
     public void Percolates_Input8_ReturnsTrue() {
         readInputFromTestFile("percolation/input8.txt");
@@ -129,5 +135,4 @@ public class PercolationTest {
             }
         }
     }
-
 }
