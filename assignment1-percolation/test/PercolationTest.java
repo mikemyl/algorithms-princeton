@@ -81,41 +81,42 @@ public class PercolationTest {
 
     @Test
     public void Percolates_Input1_ReturnsFalse() {
-        readInputFromTestFile("percolation/input1.txt");
+        readInputFromTestFile("input1.txt");
 
         Assert.assertFalse(percolation.percolates());
     }
     
     @Test
     public void Percolates_Input8_ReturnsTrue() {
-        readInputFromTestFile("percolation/input8.txt");
+        readInputFromTestFile("input8.txt");
 
         Assert.assertTrue(percolation.percolates());
     }
 
     @Test
     public void Percolates_Input50_ReturnsTrue() {
-        readInputFromTestFile("percolation/input50.txt");
+        readInputFromTestFile("input50.txt");
 
         Assert.assertTrue(percolation.percolates());
     }
 
     @Test
     public void Percolates_Input8No_ReturnsFalse() {
-        readInputFromTestFile("percolation/input8-no.txt");
+        readInputFromTestFile("input8-no.txt");
 
         Assert.assertFalse(percolation.percolates());
     }
 
     @Test
     public void Percolates_Input10No_ReturnsFalse() {
-        readInputFromTestFile("percolation/input10-no.txt");
+        readInputFromTestFile("input10-no.txt");
 
         Assert.assertFalse(percolation.percolates());
     }
 
     private void readInputFromTestFile(String testFile) {
-        try (Stream<String> stream = Files.lines(Paths.get(testFile))) {
+        try (Stream<String> stream = Files.lines(Paths.get(getClass().getResource
+                (testFile).getPath()))) {
             stream.forEach(this::performAction);
         }
         catch (IOException e) {
