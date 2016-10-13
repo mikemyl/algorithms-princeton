@@ -10,5 +10,5 @@ We basically need to utilize the [union find data structure](https://en.wikipedi
 
 Deliverables:
 
-* `Percolation.java`
-* `PercolationStats.java`
+* [Percolation.java](src/Percolation.java)
+* [PercolationStats.java](src/PercolationStats.java)
