@@ -20,3 +20,8 @@ Deliverables:
 * [Deque.java](src/Deque.java)
 * [RandomizedQueue.java](src/RandomizedQueue.java)
 * [Subset.java](src/Subset.java)
+
+Unittests:
+
+* [DequeTest.java](test/DequeTest.java)
+* [RandomizedQueueTest.java](test/RandomizedQueueTest.java)
