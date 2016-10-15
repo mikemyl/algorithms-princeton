@@ -143,7 +143,12 @@ public class Deque<Item> implements Iterable<Item> {
             }
         };
     }
-
+    
+    /**
+     * Main method - currently empty, cause unittests were written on seperate
+     * classes. This method stub was introduced just to conform to the API.
+     * @param args
+     */
     public static void main(String[] args) {
 
     }
