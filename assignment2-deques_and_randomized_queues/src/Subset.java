@@ -31,12 +31,15 @@ public class Subset {
         if (!(args.length == 1))
             throw new IllegalArgumentException("Usage: java Subset <number_of_strings>");
         int stringsNumber = Integer.valueOf(args[0]);
-        RandomizedQueue<String> rq = new RandomizedQueue<>();
-        while (!StdIn.isEmpty()) {
-            if (rq.size() >= stringsNumber)
-                rq.dequeue();
-            rq.enqueue(StdIn.readString());
+        if (stringsNumber == 0) {
+            while (!StdIn.isEmpty())
+                StdIn.readString();
+            return;
         }
-        rq.forEach(System.out::println);
+        RandomizedQueue<String> rq = new RandomizedQueue<>();
+        while (!StdIn.isEmpty())
+            rq.enqueue(StdIn.readString());
+        for (int i = 0; i < stringsNumber; i++)
+            System.out.println(rq.dequeue());
     }
 }

@@ -73,6 +73,8 @@ public class Deque<Item> implements Iterable<Item> {
             throw new NoSuchElementException("Cannot remove from empty deque");
         Item ret = first.val;
         first = first.next;
+        if (first != null)
+            first.prev = null;
         size--;
         if (isEmpty()) {
             last = null;
@@ -90,6 +92,8 @@ public class Deque<Item> implements Iterable<Item> {
             throw new NoSuchElementException("Cannot remove from empty deque");
         Item ret = last.val;
         last = last.prev;
+        if (last != null)
+            last.next = null;
         size--;
         if (isEmpty()) {
             first = null;
@@ -143,12 +147,12 @@ public class Deque<Item> implements Iterable<Item> {
             }
         };
     }
-    
     /**
      * Main method - currently empty, cause unittests were written on seperate
      * classes. This method stub was introduced just to conform to the API.
      * @param args
      */
+
     public static void main(String[] args) {
 
     }

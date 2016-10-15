@@ -168,6 +168,20 @@ public class DequeTest {
         assertEquals(it.hasNext(), false);
     }
 
+    @Test
+    public void Iterator_DequeInterMixedOperation_CorrectSize() {
+        deq.addLast(1);
+        deq.addFirst(2);
+        deq.addFirst(3);
+        deq.removeFirst();
+        deq.removeLast();
+
+        Iterator<Integer> it = deq.iterator();
+
+        assertEquals(it.next(), Integer.valueOf(2));
+        assertEquals(it.hasNext(), false);
+    }
+
 
 
 }
