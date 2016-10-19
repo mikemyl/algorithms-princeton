@@ -1,5 +1,7 @@
+import edu.princeton.cs.algs4.In;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.Comparator;
 
 import static org.junit.Assert.*;
@@ -66,5 +68,17 @@ public class PointTest {
         Comparator<Point> slopeOrder = a.slopeOrder();
 
         assertEquals(slopeOrder.compare(b, c), 0);
+    }
+
+    static Point[] readPointsFromFile(String testFile) {
+            In in = new In(new File(PointTest.class.getResource(testFile).getFile()));
+            int n = in.readInt();
+            Point[] points = new Point[n];
+            for (int i = 0; i < n; i++) {
+                int x = in.readInt();
+                int y = in.readInt();
+                points[i] = new Point(x, y);
+            }
+            return points;
     }
 }
