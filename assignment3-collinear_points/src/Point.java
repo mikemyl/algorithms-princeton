@@ -8,8 +8,9 @@
  *
  ******************************************************************************/
 
-import java.util.Comparator;
 import edu.princeton.cs.algs4.StdDraw;
+
+import java.util.Comparator;
 
 public class Point implements Comparable<Point> {
 
@@ -66,7 +67,7 @@ public class Point implements Comparable<Point> {
         }
         if (this.y == that.y)
             return +0.0;
-        return (that.y - this.y) / (that.x - this.x);
+        return (double) (that.y - this.y) / (that.x - this.x);
     }
 
     /**

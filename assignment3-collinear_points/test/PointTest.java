@@ -50,11 +50,21 @@ public class PointTest {
     }
 
     @Test
-    public void SlopeOrder_EquallPoints_ReturnsZero() {
+    public void SlopeOrder_EqualPoints_ReturnsZero() {
         Point a = new Point(1, 1);
         Point b = new Point(1, 1);
         Comparator<Point> slopeOrder = a.slopeOrder();
 
         assertEquals(slopeOrder.compare(a, b), 0);
+    }
+
+    @Test
+    public void SlopeOrder_CollinearPoints_EqualSlope() {
+        Point a = new Point(0, 0);
+        Point b = new Point(1, 1);
+        Point c = new Point(2, 2);
+        Comparator<Point> slopeOrder = a.slopeOrder();
+
+        assertEquals(slopeOrder.compare(b, c), 0);
     }
 }
