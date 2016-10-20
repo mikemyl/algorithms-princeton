@@ -1,10 +1,6 @@
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by mike on 10/19/16.
@@ -34,23 +30,55 @@ public class FastCollinearPointsTest {
         Point[] points = PointTest.readPointsFromFile("input8.txt");
 
         FastCollinearPoints fc = new FastCollinearPoints(points);
-        assertEquals(2, fc.numberOfSegments());
         for (LineSegment ls: fc.segments()) {
             System.out.println(ls);
         }
+        assertEquals(2, fc.numberOfSegments());
     }
 
     @Test
     public void Constructor_Input6txt_ReturnsOneCollinearPoint() {
         Point[] points = PointTest.readPointsFromFile("input6.txt");
 
-        BruteCollinearPoints bc = new BruteCollinearPoints(points);
-        for (LineSegment ls: bc.segments()) {
+        FastCollinearPoints fc = new FastCollinearPoints(points);
+        for (LineSegment ls: fc.segments()) {
             System.out.println(ls);
         }
-        assertEquals(1, bc.numberOfSegments());
+        assertEquals(1, fc.numberOfSegments());
     }
 
+    @Test
+    public void Constructor_Input40txt_ReturnsTwoCollinearPointS() {
+        Point[] points = PointTest.readPointsFromFile("input40.txt");
+
+        FastCollinearPoints fc = new FastCollinearPoints(points);
+        assertEquals(4, fc.numberOfSegments());
+        for (LineSegment ls: fc.segments()) {
+            System.out.println(ls);
+        }
+    }
+
+    @Test
+    public void Constructor_Input48txt_ReturnsTwoCollinearPointS() {
+        Point[] points = PointTest.readPointsFromFile("input48.txt");
+
+        FastCollinearPoints fc = new FastCollinearPoints(points);
+        assertEquals(6, fc.numberOfSegments());
+        for (LineSegment ls: fc.segments()) {
+            System.out.println(ls);
+        }
+    }
+
+    @Test
+    public void Constructor_Equidistanttxt_ReturnsTwoCollinearPointS() {
+        Point[] points = PointTest.readPointsFromFile("equidistant.txt");
+
+        FastCollinearPoints fc = new FastCollinearPoints(points);
+        assertEquals(4, fc.numberOfSegments());
+        for (LineSegment ls: fc.segments()) {
+            System.out.println(ls);
+        }
+    }
 
 
 

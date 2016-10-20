@@ -11,47 +11,52 @@ public class BruteCollinearPoints {
     public BruteCollinearPoints(Point[] points) {
         if (points == null)
             throw new NullPointerException();
-
-        validateAndCopyArray(points);
+        sortedPoints = Arrays.copyOf(points, points.length);
+        Arrays.sort(sortedPoints);
+        Point prev = null;
+        for (Point point : sortedPoints) {
+            if ((prev != null) && (point.slopeTo(prev) == Double.NEGATIVE_INFINITY))
+                throw new IllegalArgumentException();
+            prev = point;
+        }
         segments = new ArrayList<>();
-        Set<Point> pointsInSegments = new HashSet<>();
-        boolean found = false;
-        for (Point point1: sortedPoints) {
-            if (pointsInSegments.contains(point1))
-                continue;
-            for (Point point2: sortedPoints) {
-                if (point1.compareTo(point2) == 0 || pointsInSegments.contains(point2))
-                    continue;
-                for (Point point3: sortedPoints) {
-                    if (point1.compareTo(point3) == 0 ||
-                            point2.compareTo(point3) == 0 ||
-                            pointsInSegments.contains(point3))
-                        continue;
-                    for (Point point4: sortedPoints) {
-                        if (point1.compareTo(point4) == 0 ||
-                                point2.compareTo(point4) == 0 ||
-                                point3.compareTo(point4) == 0 ||
-                                pointsInSegments.contains(point4))
-                            continue;
-                        double slope = point1.slopeTo(point2);
-                        if ((point1.slopeTo(point3) == slope) &&
-                                (point1.slopeTo(point4) == slope)) {
-                            segments.add(new LineSegment(point1, point4));
-                            pointsInSegments.add(point1);
-                            pointsInSegments.add(point2);
-                            pointsInSegments.add(point3);
-                            pointsInSegments.add(point4);
-                            found = true;
+        for (int i = 0; i < points.length; i++) {
+            for (int j = i + 1; j < points.length; j++) {
+                double slope = points[i].slopeTo(points[j]);
+                int collinears = 2;
+                Point point3 = null;
+                for (int k = j + 1; k < points.length; k++) {
+                    if (points[i].slopeTo(points[k]) == slope) {
+                        collinears++;
+                        if (collinears == 4) {
+                            Point min = findMinPoint(points[i], points[j], point3, points[k]);
+                            Point max = findMaxPoint(points[i], points[j], point3, points[k]);
+                            segments.add(new LineSegment(min, max));
                             break;
                         }
+                        point3 = points[k];
                     }
-                    if (found)
-                        break;
                 }
-                if (found)
-                    break;
             }
         }
+    }
+
+    private Point findMinPoint(Point... points) {
+        Point min = points[0];
+        for (Point p : points) {
+            if (min.compareTo(p) > 0)
+                min = p;
+        }
+        return min;
+    }
+
+    private Point findMaxPoint(Point... points) {
+        Point max = points[0];
+        for (Point p : points) {
+            if (max.compareTo(p) < 0)
+                max = p;
+        }
+        return max;
     }
 
     public LineSegment[] segments() {
@@ -61,16 +66,4 @@ public class BruteCollinearPoints {
     public int numberOfSegments() {
         return segments.size();
     }
-
-    private void validateAndCopyArray(Point[] points) {
-        sortedPoints = Arrays.copyOf(points, points.length);
-        Arrays.sort(sortedPoints);
-        Point prev = null;
-        for (Point point: points) {
-            if (prev != null && point.compareTo(prev) == 0)
-                throw new IllegalArgumentException("Duplicate Point detected");
-            prev = point;
-        }
-    }
-
 }
