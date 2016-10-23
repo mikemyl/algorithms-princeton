@@ -1,7 +1,7 @@
 # Programming Assignment 2 - Deques and Randomized Queues
                              
 
-This first assignment's specification can be found [here](http://coursera.cs.princeton.edu/algs4/assignments/queues.html).
+This assignment's specification can be found [here](http://coursera.cs.princeton.edu/algs4/assignments/queues.html).
 
 Briefly, in this assignment we need to implement a deque (Double-Ended Queue
 or Deque) - that is a generalization of stack and queue that supports adding
