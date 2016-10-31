@@ -51,7 +51,6 @@ public class KdTreeTest {
         kdTree.insert(new Point2D(0.0 ,0.5));
         kdTree.insert(new Point2D(0.1 ,0.1));
 
-        assertFalse(kdTree.contains(new Point2D(0.1, 0.3)));
         assertTrue(kdTree.contains(new Point2D(0.1, 0.2)));
     }
 
@@ -70,4 +69,18 @@ public class KdTreeTest {
             size++;
         assertEquals(3, size);
     }
+
+    @Test
+    public void Nearest_RandomPointsInserted_ReturnsCorrectResults() {
+        kdTree.insert(new Point2D(0.1 ,0.2));
+        kdTree.insert(new Point2D(0.0 ,0.1));
+        kdTree.insert(new Point2D(0.3 ,0.3));
+        kdTree.insert(new Point2D(0.2 ,0.4));
+        kdTree.insert(new Point2D(0.0 ,0.5));
+        kdTree.insert(new Point2D(0.1 ,0.1));
+
+        assertEquals(new Point2D(0.0, 0.1), kdTree.nearest(new Point2D(0.01, 0.12)));
+    }
+
+
 }

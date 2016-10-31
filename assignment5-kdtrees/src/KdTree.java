@@ -26,50 +26,53 @@ public class KdTree {
 
     public void insert(Point2D point) {
         Objects.requireNonNull(point);
-        put(root, point, Orientation.VERTICAL);
+        size++;
+        put(root, point, Orientation.HORIZONTAL);
     }
 
     private void put(Node node, Point2D point, Orientation orientation) {
         if (root == null) {
-            root = new Node(point, new RectHV(0.0, 0.0, 1, 1));
+            root = new Node(point, new RectHV(0.0, 0.0, 1.0, 1.0));
             return;
         }
         Comparator<Point2D> orientationComparator =
                 getCurrentLevelComparator(orientation);
-        int cmp = orientationComparator.compare(node.p, point);
+        int cmp = orientationComparator.compare(point, node.p);
         if (cmp < 0) {
             if (node.lb == null)
-                node.lb = new Node(point, createLbRectanle(node, orientation));
+                node.lb = new Node(point, createLbRectangle(node, orientation));
             else
                 put(node.lb, point, orientation.next());
         }
         else {
-            if (node.p.compareTo(point) == 0)
+            if (node.p.compareTo(point) == 0) {
+                size--;
                 return;
+            }
             if (node.rt == null)
-                node.rt = new Node(point, createRtRectanle(node, orientation));
+                node.rt = new Node(point, createRtRectangle(node, orientation));
             else
                 put(node.rt, point, orientation.next());
         }
     }
 
-    private RectHV createLbRectanle(Node node, Orientation orientation) {
+    private RectHV createLbRectangle(Node node, Orientation orientation) {
         if (orientation == Orientation.VERTICAL)
-            return new RectHV(node.rect.xmin(), node.rect.ymin(), node.p.x(), node.rect.ymax());
-        else
             return new RectHV(node.rect.xmin(), node.rect.ymin(), node.rect.xmax(), node.p.y());
+        else
+            return new RectHV(node.rect.xmin(), node.rect.ymin(), node.p.x(), node.rect.ymax());
     }
 
-    private RectHV createRtRectanle(Node node, Orientation orientation) {
+    private RectHV createRtRectangle(Node node, Orientation orientation) {
         if (orientation == Orientation.VERTICAL)
-            return new RectHV(node.p.x(), node.rect.ymin(), node.rect.xmax(), node.rect.ymax());
-        else
             return new RectHV(node.rect.xmin(), node.p.y(), node.rect.xmax(), node.rect.ymax());
+        else
+            return new RectHV(node.p.x(), node.rect.ymin(), node.rect.xmax(), node.rect.ymax());
     }
 
     public boolean contains(Point2D point2D) {
         Objects.requireNonNull(point2D);
-        return get(root, point2D, Orientation.VERTICAL);
+        return get(root, point2D, Orientation.HORIZONTAL);
     }
 
     private boolean get(Node node, Point2D point2D, Orientation orientation) {
@@ -77,7 +80,7 @@ public class KdTree {
             return false;
         Comparator<Point2D> orientationComparator =
                 getCurrentLevelComparator(orientation);
-        int cmp = orientationComparator.compare(node.p, point2D);
+        int cmp = orientationComparator.compare(point2D, node.p);
         if (cmp < 0)
             return get(node.lb, point2D, orientation.next());
         else {
@@ -103,11 +106,11 @@ public class KdTree {
             nodesInCurrentLevel--;
             if (rect.contains(node.p))
                 pointList.add(node.p);
-            if ((node.lb != null ) && (node.lb.rect.intersects(rect))) {
+            if ((node.lb != null) && (node.lb.rect.intersects(rect))) {
                 nodeQueue.enqueue(node.lb);
                 nodesInNextLevel++;
             }
-            if ((node.rt != null ) && (node.rt.rect.intersects(rect))) {
+            if ((node.rt != null) && (node.rt.rect.intersects(rect))) {
                 nodeQueue.enqueue(node.rt);
                 nodesInNextLevel++;
             }
@@ -120,7 +123,45 @@ public class KdTree {
         return pointList;
     }
 
-        private static class Node {
+    public Point2D nearest(Point2D point) {
+        Objects.requireNonNull(point);
+        return nearest(point, root);
+    }
+
+    private Point2D nearest(Point2D point, Node current) {
+        if (current == null)
+            return null;
+        Point2D nearest = current.p;
+        if (point.compareTo(current.p) > 0) {
+            if (current.rt != null) {
+                Point2D rtNearest = nearest(point, current.rt);
+                nearest = rtNearest.distanceTo(point) > nearest.distanceTo(point) ?
+                        nearest : rtNearest;
+            }
+            if ((current.lb != null) && (point.distanceTo(nearest) > current.lb.rect.distanceTo(point))) {
+                Point2D lbNearest = nearest(point, current.lb);
+                nearest = lbNearest.distanceTo(point) > nearest.distanceTo(point) ?
+                        nearest : lbNearest;
+            }
+        }
+        else {
+            if (current.lb != null) {
+                Point2D lbNearest = nearest(point, current.lb);
+                nearest = lbNearest.distanceTo(point) > nearest.distanceTo(point) ?
+                        nearest : lbNearest;
+            }
+            if ((current.rt != null) && (point.distanceTo(nearest) > current.rt.rect.distanceTo(point))) {
+                Point2D rtNearest = nearest(point, current.rt);
+                nearest = rtNearest.distanceTo(point) > nearest.distanceTo(point) ?
+                        nearest : rtNearest;
+            }
+        }
+        return nearest;
+    }
+
+    public void draw() {}
+
+    private static class Node {
         private Point2D p;
         private RectHV rect;
         private Node lb;
