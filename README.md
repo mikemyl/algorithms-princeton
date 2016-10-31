@@ -11,4 +11,5 @@ unittests.
 * [Programming Assignment 2 - Deques and Randomized Queues](assignment2-deques_and_randomized_queues)
 * [Programming Assignment 3 - Collinear Points](assignment3-collinear_points)
 * [Programming Assignment 4 - 8 puzzle](assignment4-8puzzle)
+* [Programming Assignment 5 - Kd-Trees](assignment5-kdtrees)
 
